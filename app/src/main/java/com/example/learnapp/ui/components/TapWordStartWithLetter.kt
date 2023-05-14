@@ -19,6 +19,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,8 +36,17 @@ import org.w3c.dom.Text
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TapWordStartWithLetter() {
+fun TapWordStartWithLetter(index: Int, setIndex: (Int) -> Unit) {
     val vector: Painter = painterResource(id = R.drawable.ic_launcher_background)
+    val words = listOf("Duck", "Of", "Dex")
+    val correctWords = listOf(words[0], words[2])
+    val (selection, incrementSelection) = remember {
+        mutableStateOf(0);
+    }
+
+    if (selection >= words.size - 1){
+        setIndex(index + 1)
+    }
     Column(
         Modifier
             .fillMaxHeight()
@@ -52,9 +63,10 @@ fun TapWordStartWithLetter() {
         Row(
             Modifier.padding(20.dp)
         ){
-            Word("Duck")
-            Word("Desk")
-            Word("Cat")
+
+            words.forEach { word ->
+                Word(word, correctText = correctWords, selection=selection,incrementSelection=incrementSelection)
+            }
 
         }
 
@@ -64,9 +76,29 @@ fun TapWordStartWithLetter() {
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-private fun Word(text: String,modifier: Modifier = Modifier) {
+private fun Word(
+        text: String,
+        modifier: Modifier = Modifier,
+        correctText: List<String>,
+        selection: Int,
+        incrementSelection: (Int) -> Unit
+    ) {
+    val (isCorrect, setIsCorrect) = remember {
+        mutableStateOf(false)
+    }
+    val bgColor = if (isCorrect) {
+            MaterialTheme.colorScheme.primaryContainer
+        } else {
+            MaterialTheme.colorScheme.background
+        }
     Surface(
-        onClick = {},
+        onClick = {
+                  if (text in correctText) {
+                      setIsCorrect(true)
+                      incrementSelection(selection+1)
+                  }
+
+        },
         Modifier.padding(5.dp),
         shape = RoundedCornerShape(8.dp),
         tonalElevation = 3.dp,
@@ -75,10 +107,12 @@ private fun Word(text: String,modifier: Modifier = Modifier) {
     ) {
         Text(
             text = text,
-            modifier = Modifier.padding(5.dp),
+            modifier = Modifier
+                .padding(5.dp)
+                .background(bgColor),
             style = TextStyle(
                 fontSize = 20.sp,
-                color = MaterialTheme.colorScheme.onBackground
+                color = MaterialTheme.colorScheme.onBackground,
             )
         )
     }
@@ -86,18 +120,3 @@ private fun Word(text: String,modifier: Modifier = Modifier) {
 }
 
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    LearnAppTheme {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
-        ) {
-            Column {
-                MyProgressBar()
-                TapWordStartWithLetter()
-            }
-        }
-    }
-}
