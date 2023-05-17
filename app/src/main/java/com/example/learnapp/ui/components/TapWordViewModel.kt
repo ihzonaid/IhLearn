@@ -12,6 +12,8 @@ class TapWordViewModel:ViewModel() {
     private val _state = mutableStateOf(TapWordState())
     val state: State<TapWordState> = _state
 
+
+
     private  var  textToSpeech:TextToSpeech? = null
 
     fun textToSpeech(context: Context){
@@ -27,6 +29,7 @@ class TapWordViewModel:ViewModel() {
                         null,
                         null
                     )
+
                 }
             }
         }

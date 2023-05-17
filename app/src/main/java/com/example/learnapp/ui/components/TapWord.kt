@@ -1,12 +1,9 @@
 package com.example.learnapp.ui.components
 
 import android.media.MediaPlayer
+import android.widget.Toast
 import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -30,12 +27,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -43,14 +39,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.learnapp.MainActivityViewModel
 import com.example.learnapp.R
 import com.example.learnapp.ui.theme.LearnAppTheme
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @Composable
-fun TapWord(
-    viewModel: TapWordViewModel = viewModel()
-){
+fun TapWord(words: List<String>, correctWord: String){
 
     val myViewModel: TapWordViewModel = viewModel()
     val context = LocalContext.current
@@ -80,13 +77,13 @@ fun TapWord(
 
         Spacer(modifier = Modifier.height(30.dp))
         Row(horizontalArrangement = Arrangement.SpaceAround) {
-            WordBox("Dall")
-            WordBox("Ask")
+            WordBox(words[0], correctWord)
+            WordBox(words[1], correctWord)
         }
         Spacer(modifier = Modifier.height(30.dp))
         Row(horizontalArrangement = Arrangement.SpaceAround) {
-            WordBox("Call")
-            WordBox("D")
+            WordBox(words[3], correctWord)
+            WordBox(words[2], correctWord)
         }
     }
 
@@ -99,14 +96,16 @@ fun TapWord(
 
 
 @Composable
-fun WordBox(word: String = "Word") {
+fun WordBox(word: String = "Word", correctWord: String,
+            lessonViewModel: MainActivityViewModel = viewModel()) {
+    val context = LocalContext.current
+    val coroutineScope = CoroutineScope(Dispatchers.Main)
 
     val animatableOffset = remember { Animatable(0f) }
     val animationScope = rememberCoroutineScope()
 
     val movementDistance = 10.dp
 
-    val context = LocalContext.current
     val mediaPlayer = remember { MediaPlayer.create(context, R.raw.negative_beeps) }
 
     DisposableEffect(Unit) {
@@ -116,11 +115,19 @@ fun WordBox(word: String = "Word") {
     }
 
     val handleClick: () -> Unit = {
-        animationScope.launch {
+        println(word + correctWord)
+
+        if (word == "apple") {
+            lessonViewModel.incrementIndex()
+            Toast.makeText(context, "Index" + lessonViewModel.currentIndex.value, Toast.LENGTH_SHORT).show()
+
+        } else {
+            animationScope.launch {
                 animatableOffset.animateTo(-movementDistance.value, animationSpec = spring())
                 animatableOffset.animateTo(movementDistance.value, animationSpec = spring())
                 animatableOffset.animateTo(0f, animationSpec = spring())
                 mediaPlayer.start()
+            }
         }
 
     }
@@ -135,8 +142,10 @@ fun WordBox(word: String = "Word") {
                 y = 0.dp
             )
     ){
-        Box (Modifier.fillMaxSize()
-            .border(width = 2.dp, color = MaterialTheme.colorScheme.outline)
+        Box (
+            Modifier
+                .fillMaxSize()
+                .border(width = 2.dp, color = MaterialTheme.colorScheme.outline)
         ) {
             Text(text = word,
                 modifier = Modifier.align(Alignment.Center),
@@ -160,7 +169,7 @@ fun GreetingPreview() {
             Column {
                 MyProgressBar()
             }
-            TapWord()
+            TapWord(listOf("apple", "vong", "cong", "black"), "apple")
         }
     }
 }

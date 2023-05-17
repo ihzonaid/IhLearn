@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import com.example.learnapp.R
 
 @Composable
-fun IntroduceAlphabet(index: Int, setIndex: (Int) -> Unit) {
+fun IntroduceAlphabet(alphabets: List<String>) {
     val vector: Painter = painterResource(id = R.drawable.ic_launcher_background)
     val (buttonClicked, setButtonClicked) = remember { mutableStateOf(false) }
 
@@ -40,11 +40,11 @@ fun IntroduceAlphabet(index: Int, setIndex: (Int) -> Unit) {
     ) {
         Spacer(Modifier.weight(.3f))
         Image(vector, contentDescription = "My Vector Image",)
-        Alphabet()
+        Alphabet(listOf("A", "B"))
         Spacer(Modifier.weight(1f))
         Box(Modifier.size(size).background(color))
 
-        MyButton(onClick = { setButtonClicked(!buttonClicked); setIndex(2) })
+        MyButton(onClick = { setButtonClicked(!buttonClicked);  })
 
     }
 }

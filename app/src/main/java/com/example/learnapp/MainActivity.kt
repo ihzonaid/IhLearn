@@ -15,6 +15,7 @@ import com.example.learnapp.ui.components.IntroduceAlphabet
 import com.example.learnapp.ui.components.MyProgressBar
 import com.example.learnapp.ui.components.TapWord
 import com.example.learnapp.ui.components.TapWordStartWithLetter
+import com.example.learnapp.ui.screens.QuizScreen
 import com.example.learnapp.ui.theme.LearnAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -22,28 +23,16 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
-         setContent {
-             val (index, setIndex) = remember { mutableStateOf(0) }
+        setContent {
+            val (index, setIndex) = remember { mutableStateOf(0) }
             LearnAppTheme {
                 // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
+                QuizScreen()
 
-                    Column {
-                        MyProgressBar()
-                        when (index) {
-                            0 -> TapWord()
-                            1 -> IntroduceAlphabet(index, setIndex)
-                            2 -> TapWordStartWithLetter(index, setIndex)
-                        }
-
-                    }
-                }
             }
         }
     }
 }
+
 
 

@@ -11,12 +11,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun Alphabet(){
+fun Alphabet(alphabets: List<String>){
     Row() {
-        Text(text = "A", Modifier.padding(20.dp),
+        Text(text = alphabets[0], Modifier.padding(20.dp),
             style = TextStyle(fontSize = 100.sp, fontWeight = FontWeight.Bold)
         )
-        Text(text = "A", Modifier.padding(20.dp),
+        Text(text = alphabets[1], Modifier.padding(20.dp),
             style =  TextStyle(fontSize = 100.sp, fontWeight = FontWeight.Bold)
         )
     }

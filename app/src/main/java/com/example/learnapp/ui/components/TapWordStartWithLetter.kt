@@ -36,8 +36,9 @@ import org.w3c.dom.Text
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TapWordStartWithLetter(index: Int, setIndex: (Int) -> Unit) {
+fun TapWordStartWithLetter(words: List<String>) {
     val vector: Painter = painterResource(id = R.drawable.ic_launcher_background)
+
     val words = listOf("Duck", "Of", "Dex")
     val correctWords = listOf(words[0], words[2])
     val (selection, incrementSelection) = remember {
@@ -45,7 +46,7 @@ fun TapWordStartWithLetter(index: Int, setIndex: (Int) -> Unit) {
     }
 
     if (selection >= words.size - 1){
-        setIndex(index + 1)
+//        setIndex(index + 1)
     }
     Column(
         Modifier
