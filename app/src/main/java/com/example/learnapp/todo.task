@@ -1,0 +1,23 @@
+One Lesson
+4 screen
+every screen should be working
+
+common
+    - voice tts
+    - sound
+    - animation (shacking animation)
+
+1 screen (IntroduceAlphabet)
+    - animating word
+    - next button a while
+
+2 screen (TapWordStartWith)
+    - add voice
+    - fix design
+
+3 screen (MatchingLowerUpperCase)
+    - drag functionality
+
+4 screen (Tap Word)
+    - add modifier
+
