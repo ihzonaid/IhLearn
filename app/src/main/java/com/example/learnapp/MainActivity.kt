@@ -13,6 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.example.learnapp.ui.components.IntroduceAlphabet
 import com.example.learnapp.ui.components.MyProgressBar
+import com.example.learnapp.ui.components.TapWord
 import com.example.learnapp.ui.components.TapWordStartWithLetter
 import com.example.learnapp.ui.theme.LearnAppTheme
 
@@ -22,7 +23,7 @@ class MainActivity : ComponentActivity() {
 
         super.onCreate(savedInstanceState)
          setContent {
-             val (index, setIndex) = remember { mutableStateOf(1) }
+             val (index, setIndex) = remember { mutableStateOf(0) }
             LearnAppTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
@@ -33,6 +34,7 @@ class MainActivity : ComponentActivity() {
                     Column {
                         MyProgressBar()
                         when (index) {
+                            0 -> TapWord()
                             1 -> IntroduceAlphabet(index, setIndex)
                             2 -> TapWordStartWithLetter(index, setIndex)
                         }
