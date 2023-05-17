@@ -43,9 +43,9 @@ fun MatchingLowerUpperCase() {
             horizontalArrangement = Arrangement.Center,
         ) {
             Spacer(modifier = Modifier.width(120.dp))
-            AlphabetBox()
+            AlphabetBox("A")
             Spacer(modifier = Modifier.width(80.dp))
-            AlphabetBox()
+            AlphabetBox("D")
         }
 
         Spacer(modifier = Modifier
@@ -56,8 +56,8 @@ fun MatchingLowerUpperCase() {
             Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceAround
         ) {
-            AlphabetBox()
-            AlphabetBox()
+            AlphabetBox("A")
+            AlphabetBox("D")
         }
 
         Spacer(modifier = Modifier
@@ -68,8 +68,8 @@ fun MatchingLowerUpperCase() {
             Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceAround
         ){
-            AlphabetBox()
-            AlphabetBox()
+            AlphabetBox("D")
+            AlphabetBox("A")
         }
 
 
@@ -78,14 +78,14 @@ fun MatchingLowerUpperCase() {
 }
 
 @Composable
-fun AlphabetBox(modifier: Modifier = Modifier) {
+fun AlphabetBox(alphabet: String, modifier: Modifier = Modifier) {
     Box(
         modifier = Modifier
             .size(130.dp)
             .border(width = 2.dp, color = MaterialTheme.colorScheme.outline)
 
         ){
-        Text(text = "D",
+        Text(text = alphabet,
             modifier = Modifier.align(Alignment.Center),
             style = TextStyle(fontSize = 80.sp, fontWeight = FontWeight.Bold)
         )
