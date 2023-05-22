@@ -12,16 +12,22 @@ import kotlinx.coroutines.flow.StateFlow
 class MainActivityViewModel: ViewModel() {
 
     private val _currentIndex = MutableStateFlow(0)
-    val currentIndex: StateFlow<Int> = _currentIndex
+    val currentIndex: MutableStateFlow<Int> = _currentIndex
+
+    private val _currentLessonState = MutableStateFlow<LessonState>(lessons.value[0])
+    val currentLessonState: MutableStateFlow<LessonState> = _currentLessonState
 
     fun incrementIndex() {
-        val newIndex = (_currentIndex.value + 1) % lessons.size
+        val newIndex = (_currentIndex.value + 1) % lessons.value.size
         _currentIndex.value = newIndex
+        _currentLessonState.value = getCurrentLessonState()
+
     }
 
+
     fun getCurrentLessonState(): LessonState {
-        val index = _currentIndex.value
-        return lessons[index]
+        val index = currentIndex.value
+        return lessons.value[index]
     }
 
 }

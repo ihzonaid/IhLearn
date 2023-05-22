@@ -31,7 +31,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -119,7 +118,12 @@ fun WordBox(word: String = "Word", correctWord: String,
 
         if (word == "apple") {
             lessonViewModel.incrementIndex()
-            Toast.makeText(context, "Index" + lessonViewModel.currentIndex.value, Toast.LENGTH_SHORT).show()
+            Toast.makeText(context,
+                "Index: "
+                        + lessonViewModel.currentIndex.value
+                        + " "
+                        + lessonViewModel.getCurrentLessonState().toString(),
+                Toast.LENGTH_SHORT).show()
 
         } else {
             animationScope.launch {

@@ -1,13 +1,18 @@
 package com.example.learnapp.ui.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.learnapp.MainActivityViewModel
 import com.example.learnapp.data.model.LessonState
@@ -22,16 +27,29 @@ import com.example.learnapp.ui.components.TapWordStartWithLetter
 fun QuizScreen(
     lessonViewModel: MainActivityViewModel = viewModel()
 ){
-    val currentIndex by lessonViewModel.currentIndex.collectAsState()
-    val currentLessonState = lessonViewModel.getCurrentLessonState()
+    val currentLessonState by lessonViewModel.currentLessonState.collectAsState()
+    val context = LocalContext.current
+
 
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
-
         Column {
             MyProgressBar()
+
+            Button(onClick = {
+                lessonViewModel.incrementIndex()
+                Toast.makeText(context,
+                    "Index: "
+                            + lessonViewModel.currentIndex.value
+                            + " "
+                            + currentLessonState,
+                    Toast.LENGTH_SHORT).show()
+
+            }) {
+                Text(text = "Next")
+            }
 
 
             when (currentLessonState) {
@@ -59,11 +77,6 @@ fun QuizScreen(
 
             }
 
-//            when (index) {
-//                0 -> TapWord()
-//                1 -> IntroduceAlphabet(index, setIndex)
-//                2 -> TapWordStartWithLetter(index, setIndex)
-//            }
 
         }
     }
