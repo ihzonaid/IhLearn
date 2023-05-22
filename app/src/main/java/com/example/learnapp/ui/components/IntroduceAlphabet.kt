@@ -19,16 +19,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.learnapp.MainActivityViewModel
 import com.example.learnapp.R
 
 @Composable
-fun IntroduceAlphabet(alphabets: List<String>) {
+fun IntroduceAlphabet(alphabets: List<String>, lessonViewModel: MainActivityViewModel = viewModel()) {
     val vector: Painter = painterResource(id = R.drawable.ic_launcher_background)
     val (buttonClicked, setButtonClicked) = remember { mutableStateOf(false) }
-
-    val color =  if (buttonClicked) { Color.Black } else {Color.Blue}
-    val size = if (buttonClicked) { 100.dp } else { 50.dp }
-
 
     Column(
         Modifier
@@ -42,9 +40,8 @@ fun IntroduceAlphabet(alphabets: List<String>) {
         Image(vector, contentDescription = "My Vector Image",)
         Alphabet(listOf("A", "B"))
         Spacer(Modifier.weight(1f))
-        Box(Modifier.size(size).background(color))
 
-        MyButton(onClick = { setButtonClicked(!buttonClicked);  })
+        MyButton(onClick = { lessonViewModel.incrementIndex()  })
 
     }
 }

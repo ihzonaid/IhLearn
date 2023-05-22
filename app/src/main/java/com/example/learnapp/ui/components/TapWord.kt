@@ -98,7 +98,6 @@ fun TapWord(words: List<String>, correctWord: String){
 fun WordBox(word: String = "Word", correctWord: String,
             lessonViewModel: MainActivityViewModel = viewModel()) {
     val context = LocalContext.current
-    val coroutineScope = CoroutineScope(Dispatchers.Main)
 
     val animatableOffset = remember { Animatable(0f) }
     val animationScope = rememberCoroutineScope()
@@ -118,13 +117,6 @@ fun WordBox(word: String = "Word", correctWord: String,
 
         if (word == "apple") {
             lessonViewModel.incrementIndex()
-            Toast.makeText(context,
-                "Index: "
-                        + lessonViewModel.currentIndex.value
-                        + " "
-                        + lessonViewModel.getCurrentLessonState().toString(),
-                Toast.LENGTH_SHORT).show()
-
         } else {
             animationScope.launch {
                 animatableOffset.animateTo(-movementDistance.value, animationSpec = spring())

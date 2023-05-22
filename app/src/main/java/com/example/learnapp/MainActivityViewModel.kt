@@ -14,11 +14,11 @@ class MainActivityViewModel: ViewModel() {
     private val _currentIndex = MutableStateFlow(0)
     val currentIndex: MutableStateFlow<Int> = _currentIndex
 
-    private val _currentLessonState = MutableStateFlow<LessonState>(lessons.value[0])
+    private val _currentLessonState = MutableStateFlow<LessonState>(lessons[0])
     val currentLessonState: MutableStateFlow<LessonState> = _currentLessonState
 
     fun incrementIndex() {
-        val newIndex = (_currentIndex.value + 1) % lessons.value.size
+        val newIndex = (_currentIndex.value + 1) % lessons.size
         _currentIndex.value = newIndex
         _currentLessonState.value = getCurrentLessonState()
 
@@ -27,7 +27,7 @@ class MainActivityViewModel: ViewModel() {
 
     fun getCurrentLessonState(): LessonState {
         val index = currentIndex.value
-        return lessons.value[index]
+        return lessons[index]
     }
 
 }

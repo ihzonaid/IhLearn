@@ -38,20 +38,6 @@ fun QuizScreen(
         Column {
             MyProgressBar()
 
-            Button(onClick = {
-                lessonViewModel.incrementIndex()
-                Toast.makeText(context,
-                    "Index: "
-                            + lessonViewModel.currentIndex.value
-                            + " "
-                            + currentLessonState,
-                    Toast.LENGTH_SHORT).show()
-
-            }) {
-                Text(text = "Next")
-            }
-
-
             when (currentLessonState) {
                 is LessonState.IntroduceAlphabetState -> {
                     IntroduceAlphabet((currentLessonState as LessonState.IntroduceAlphabetState).alphabets)
@@ -64,7 +50,8 @@ fun QuizScreen(
                 }
 
                 is LessonState.MatchingLowerUpperCaseState -> {
-                    MatchingLowerUpperCase()
+                    val alphabets = (currentLessonState as LessonState.MatchingLowerUpperCaseState).alphabets
+                    MatchingLowerUpperCase(alphabets)
                 }
                 is LessonState.TapWordState -> {
                     val tapWordState = currentLessonState as LessonState.TapWordState

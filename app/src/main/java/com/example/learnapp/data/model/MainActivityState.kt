@@ -16,5 +16,5 @@ sealed class LessonState {
 }
 
 data class MainActivityState(
-    val lessons: MutableStateFlow<List<LessonState>>
+    val lessons: List<LessonState>
 )
