@@ -8,8 +8,7 @@ sealed class LessonState {
     data class IntroduceAlphabetState(val alphabets: List<String>) : LessonState()
     data class TapWordStartWithLetterState(
         val words: List<String>,
-        val correctIndex: List<Int>,
-        val selectedWord: Int
+        val correctWord: List<String>,
     ) : LessonState()
     data class MatchingLowerUpperCaseState(val alphabets: List<String>) : LessonState()
     data class TapWordState(val words: List<String>, val answerIdx: Int) : LessonState()

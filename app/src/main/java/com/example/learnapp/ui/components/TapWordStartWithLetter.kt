@@ -6,9 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -23,31 +21,32 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.learnapp.MainActivityViewModel
 import com.example.learnapp.R
-import com.example.learnapp.ui.theme.LearnAppTheme
-import org.w3c.dom.Text
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TapWordStartWithLetter(words: List<String>) {
+fun TapWordStartWithLetter(
+    words: List<String>,
+    correctWords: List<String>,
+    lessonViewModel: MainActivityViewModel = viewModel()
+    ) {
     val vector: Painter = painterResource(id = R.drawable.ic_launcher_background)
 
-    val words = listOf("Duck", "Of", "Dex")
-    val correctWords = listOf(words[0], words[2])
     val (selection, incrementSelection) = remember {
-        mutableStateOf(0);
+        mutableStateOf(0)
     }
 
     if (selection >= words.size - 1){
-//        setIndex(index + 1)
+        lessonViewModel.incrementIndex()
     }
+
     Column(
         Modifier
             .fillMaxHeight()

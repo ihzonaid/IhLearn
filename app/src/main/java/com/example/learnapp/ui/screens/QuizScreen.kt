@@ -43,9 +43,10 @@ fun QuizScreen(
                     IntroduceAlphabet((currentLessonState as LessonState.IntroduceAlphabetState).alphabets)
                 }
                 is LessonState.TapWordStartWithLetterState -> {
-                    val tapWordState = currentLessonState as LessonState.TapWordStartWithLetterState
+                    val tapWordStartWithState = currentLessonState as LessonState.TapWordStartWithLetterState
                     TapWordStartWithLetter(
-                        words = tapWordState.words,
+                        words = tapWordStartWithState.words,
+                        correctWords = tapWordStartWithState.correctWord,
                     )
                 }
 
