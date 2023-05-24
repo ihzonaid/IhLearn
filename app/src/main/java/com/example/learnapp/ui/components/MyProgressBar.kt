@@ -80,17 +80,4 @@ fun MyProgressBar(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    LearnAppTheme {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
-        ) {
-            Column {
-                MyProgressBar()
-            }
-        }
-    }
-}
+

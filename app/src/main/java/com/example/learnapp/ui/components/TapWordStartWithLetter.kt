@@ -7,9 +7,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -24,11 +26,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.learnapp.MainActivityViewModel
 import com.example.learnapp.R
+import com.example.learnapp.ui.theme.LearnAppTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -58,10 +62,16 @@ fun TapWordStartWithLetter(
 
         Image(vector, contentDescription = "My Vector Image",
             Modifier
-                .width(200.dp)
-                .height(200.dp))
+                .width(150.dp)
+                .height(150.dp))
         Row(
-            Modifier.padding(20.dp)
+            Modifier
+                .padding(20.dp)
+                .fillMaxWidth(.5f)
+                .safeContentPadding(),
+
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center,
         ){
 
             words.forEach { word ->
@@ -99,10 +109,10 @@ private fun Word(
                   }
 
         },
-        Modifier.padding(5.dp),
+        color = bgColor,
         shape = RoundedCornerShape(8.dp),
-        tonalElevation = 3.dp,
-        shadowElevation = 3.dp,
+//        tonalElevation = 3.dp,
+        shadowElevation = 1.dp,
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
     ) {
         Text(
@@ -117,6 +127,25 @@ private fun Word(
         )
     }
 
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun GreetingPreview() {
+    LearnAppTheme {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
+        ) {
+            Column {
+                MyProgressBar()
+
+                TapWordStartWithLetter(listOf("Ami",  "tmi"), listOf("tmi"))
+
+            }
+        }
+    }
 }
 
 
