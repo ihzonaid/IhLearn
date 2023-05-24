@@ -21,8 +21,8 @@ class MainActivityViewModel: ViewModel() {
         val newIndex = (_currentIndex.value + 1) % lessons.size
         _currentIndex.value = newIndex
         _currentLessonState.value = getCurrentLessonState()
-
     }
+
 
 
     fun getCurrentLessonState(): LessonState {

@@ -154,21 +154,6 @@ fun WordBox(word: String = "Word", correctWord: String,
 }
 
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    LearnAppTheme {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
-        ) {
-            Column {
-                MyProgressBar()
-            }
-            TapWord(listOf("apple", "vong", "cong", "black"), "apple")
-        }
-    }
-}
 
 
 
