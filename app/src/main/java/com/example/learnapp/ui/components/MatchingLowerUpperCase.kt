@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
@@ -25,8 +26,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.consumeAllChanges
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.layout
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInParent
+import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
@@ -36,9 +42,17 @@ import androidx.compose.ui.unit.sp
 import kotlin.math.roundToInt
 
 @Composable
-fun MatchingLowerUpperCase(alphabet: List<String>) {
+fun MatchingLowerUpperCase(alphabets: List<String>) {
+    var (resIdx, setIdx)  = remember {
+         mutableStateOf(0)
+    }
+
     var (correct,setCorrect) = remember {
         mutableStateOf(true)
+    }
+
+    var (goalOffset,setGoalOffset) = remember {
+        mutableStateOf(Offset.Zero)
     }
     Column() {
         Spacer(modifier = Modifier
@@ -51,7 +65,8 @@ fun MatchingLowerUpperCase(alphabet: List<String>) {
             horizontalArrangement = Arrangement.Center,
         ) {
             AnimatedVisibility(visible = correct) {
-                AlphabetBox(alphabet[0].uppercase())
+                AlphabetBox(alphabets[resIdx].uppercase(), setGoalOffset)
+                Text(text = goalOffset.x.toString() + "/" + goalOffset.y.toString())
             }
         }
 
@@ -63,9 +78,8 @@ fun MatchingLowerUpperCase(alphabet: List<String>) {
             Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceAround
         ) {
-
-            alphabet.forEach { ch ->
-                DraggableAlphabetBox(alphabet = ch, 275f, -1000f, 200.dp,correct, setCorrect)
+            alphabets.forEach { alphabet ->
+                DraggableAlphabetBox(alphabet = alphabet, 200.dp,correct, setCorrect, goalOffset, ansAlphabet=alphabets[resIdx])
             }
         }
 
@@ -73,34 +87,45 @@ fun MatchingLowerUpperCase(alphabet: List<String>) {
 }
 
 @Composable
-fun AlphabetBox(alphabet: String, modifier: Modifier = Modifier) {
+fun AlphabetBox(alphabet: String,
+                setGoalOffset: (Offset) -> Unit,
+                modifier: Modifier = Modifier,
+) {
+
     Box(
         modifier = Modifier
             .size(130.dp)
             .border(width = 2.dp, color = MaterialTheme.colorScheme.outline)
-
+            .onGloballyPositioned { coordinates ->
+                setGoalOffset(coordinates.positionInRoot())
+            }
         ){
         Text(text = alphabet,
             modifier = Modifier.align(Alignment.Center),
             style = TextStyle(fontSize = 80.sp, fontWeight = FontWeight.Bold)
         )
     }
-
 }
 
 @Composable
 fun DraggableAlphabetBox(
     alphabet: String,
-    targetOffsetX: Float,
-    targetOffsetY: Float,
     targetSize: Dp,
     correct: Boolean,
-    setCorrect: (Boolean) -> Unit
+    setCorrect: (Boolean) -> Unit,
+    goalOffset: Offset,
+    ansAlphabet: String,
     ) {
     var offsetX = remember { mutableStateOf(0f) }
     var offsetY = remember { mutableStateOf(0f) }
 
     var transitionState = remember { MutableTransitionState(false) }
+
+    var targetOffset by remember {
+        mutableStateOf(Offset.Zero)
+
+    }
+
 
     var text by remember {
         mutableStateOf("value")
@@ -110,6 +135,9 @@ fun DraggableAlphabetBox(
         Box(
             modifier = Modifier
                 .size(130.dp)
+                .onGloballyPositioned { coordinate ->
+                    targetOffset = goalOffset - coordinate.positionInRoot()
+                }
                 .offset {
                     IntOffset(
                         x = offsetX.value.roundToInt(),
@@ -124,15 +152,16 @@ fun DraggableAlphabetBox(
                         onDragEnd = {
                             transitionState.targetState = false
                             val isOverTarget =
-                                offsetX.value >= (targetOffsetX-targetSize.toPx()) && (offsetY.value >= targetOffsetY - targetSize.toPx()) &&
-                                        offsetX.value <= targetOffsetX + targetSize.toPx() &&
-                                        offsetY.value <= targetOffsetY + targetSize.toPx()
+                                offsetX.value >= (targetOffset.x - targetSize.toPx()) && (offsetY.value >= targetOffset.y - targetSize.toPx()) &&
+                                        offsetX.value <= targetOffset.x + targetSize.toPx() &&
+                                        offsetY.value <= targetOffset.y + targetSize.toPx()
 
 
-                            if (isOverTarget) {
-                                offsetX.value = targetOffsetX
-                                offsetY.value = targetOffsetY
+                            if (isOverTarget && alphabet == ansAlphabet) {
+                                offsetX.value = targetOffset.x
+                                offsetY.value = targetOffset.y
 //                                setCorrect(false)
+
 
                             } else {
                                 offsetX.value = 0f
@@ -144,6 +173,9 @@ fun DraggableAlphabetBox(
                         offsetX.value += dragAmount.x
                         offsetY.value += dragAmount.y
 
+                        //
+                        text = (targetOffset).toString()
+
                     }
                 }
 
@@ -153,6 +185,7 @@ fun DraggableAlphabetBox(
                 modifier = Modifier.align(Alignment.Center),
                 style = TextStyle(fontSize = 80.sp, fontWeight = FontWeight.Bold)
             )
+            Text(text=text)
         }
     }
 

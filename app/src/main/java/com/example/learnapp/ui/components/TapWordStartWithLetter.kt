@@ -92,15 +92,15 @@ private fun Word(
         correctText: List<String>,
         selection: Int,
         incrementSelection: (Int) -> Unit
-    ) {
+) {
     val (isCorrect, setIsCorrect) = remember {
         mutableStateOf(false)
     }
     val bgColor = if (isCorrect) {
             MaterialTheme.colorScheme.primaryContainer
         } else {
-            MaterialTheme.colorScheme.background
-        }
+            MaterialTheme.colorScheme.background }
+
     Surface(
         onClick = {
                   if (text in correctText) {
@@ -111,7 +111,6 @@ private fun Word(
         },
         color = bgColor,
         shape = RoundedCornerShape(8.dp),
-//        tonalElevation = 3.dp,
         shadowElevation = 1.dp,
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
     ) {
