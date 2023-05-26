@@ -1,5 +1,6 @@
 package com.example.learnapp.ui.components
 
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -38,7 +39,7 @@ fun MyProgressBar(
 ) {
 
     val currentIndex by lessonViewModel.currentIndex.collectAsState()
-    val fillWidth: Float = (currentIndex+1 / lessons.size).toFloat()
+    val fillWidth: Float by animateFloatAsState( (currentIndex+1).toFloat() / lessons.size.toFloat())
 
     Row(
         modifier = modifier
