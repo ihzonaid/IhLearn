@@ -1,8 +1,9 @@
 package com.example.learnapp.ui.components
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.MutableTransitionState
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -10,16 +11,15 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,11 +27,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.input.pointer.consumeAllChanges
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.layout.layout
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -54,6 +51,7 @@ fun MatchingLowerUpperCase(alphabets: List<String>) {
     var (goalOffset,setGoalOffset) = remember {
         mutableStateOf(Offset.Zero)
     }
+
     Column() {
         Spacer(modifier = Modifier
             .height(20.dp)
@@ -64,9 +62,11 @@ fun MatchingLowerUpperCase(alphabets: List<String>) {
                 .wrapContentWidth(),
             horizontalArrangement = Arrangement.Center,
         ) {
-            AnimatedVisibility(visible = correct) {
-                AlphabetBox(alphabets[resIdx].uppercase(), setGoalOffset)
-                Text(text = goalOffset.x.toString() + "/" + goalOffset.y.toString())
+            Crossfade(targetState = correct) { isVisible ->
+                if (isVisible) {
+                    AlphabetBox(alphabets[resIdx].uppercase(), setGoalOffset)
+                    Text(text = goalOffset.x.toString() + "/" + goalOffset.y.toString())
+                }
             }
         }
 
@@ -78,8 +78,17 @@ fun MatchingLowerUpperCase(alphabets: List<String>) {
             Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceAround
         ) {
-            alphabets.forEach { alphabet ->
-                DraggableAlphabetBox(alphabet = alphabet, 200.dp,correct, setCorrect, goalOffset, ansAlphabet=alphabets[resIdx])
+            alphabets.subList(resIdx,alphabets.size).forEach { alphabet ->
+                DraggableAlphabetBox(
+                    alphabet = alphabet,
+                    200.dp,
+                    correct,
+                    setCorrect,
+                    goalOffset,
+                    alphabets,
+                    setIdx,
+                    resIdx,
+                )
             }
         }
 
@@ -114,7 +123,9 @@ fun DraggableAlphabetBox(
     correct: Boolean,
     setCorrect: (Boolean) -> Unit,
     goalOffset: Offset,
-    ansAlphabet: String,
+    alphabets: List<String>,
+    setIdx: (Int) -> Unit,
+    resIdx: Int,
     ) {
     var offsetX = remember { mutableStateOf(0f) }
     var offsetY = remember { mutableStateOf(0f) }
@@ -123,12 +134,19 @@ fun DraggableAlphabetBox(
 
     var targetOffset by remember {
         mutableStateOf(Offset.Zero)
+    }
 
+    var ansAlphabet by remember {
+     mutableStateOf(alphabets[resIdx])
     }
 
 
     var text by remember {
         mutableStateOf("value")
+    }
+
+    fun checkCorrectAlphabet(): Boolean {
+        return alphabet == alphabets[resIdx]
     }
 
     AnimatedVisibility(visible = correct) {
@@ -160,22 +178,24 @@ fun DraggableAlphabetBox(
                             if (isOverTarget && alphabet == ansAlphabet) {
                                 offsetX.value = targetOffset.x
                                 offsetY.value = targetOffset.y
-//                                setCorrect(false)
-
+                                setIdx(resIdx + 1)
+//                                ansAlphabet = alphabets[resIdx + 1]
+                                Log.d("ansAlphabetWhileComplete", ansAlphabet)
 
                             } else {
+                                Log.d("ansAlphabet", ansAlphabet)
+                                Log.d("alphabet", alphabet)
                                 offsetX.value = 0f
                                 offsetY.value = 0f
                             }
                         }
                     ) { change, dragAmount ->
-                        change.consumeAllChanges()
+                        change.consume()
                         offsetX.value += dragAmount.x
                         offsetY.value += dragAmount.y
 
                         //
                         text = (targetOffset).toString()
-
                     }
                 }
 
@@ -185,7 +205,11 @@ fun DraggableAlphabetBox(
                 modifier = Modifier.align(Alignment.Center),
                 style = TextStyle(fontSize = 80.sp, fontWeight = FontWeight.Bold)
             )
-            Text(text=text)
+            Column() {
+                Text(text=text)
+                Text(text = "ans: " + ansAlphabet)
+                Text(text = alphabet)
+            }
         }
     }
 
