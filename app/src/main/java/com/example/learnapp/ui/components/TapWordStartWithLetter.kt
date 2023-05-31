@@ -138,8 +138,7 @@ fun GreetingPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             Column {
-                MyProgressBar()
-
+//                MyProgressBar(navController = navController)
                 TapWordStartWithLetter(listOf("Ami",  "tmi"), listOf("tmi"))
 
             }
